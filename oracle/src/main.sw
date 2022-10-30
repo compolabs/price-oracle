@@ -20,28 +20,34 @@ use events::PriceUpdateEvent;
 use interface::Oracle;
 
 storage {
-    // Current price of tracked asset
-    // TODO use option when https://github.com/FuelLabs/fuels-rs/issues/415 is fixed
-    price: u64 = 0,
+    price_eth: u64 = 0,
+    price_dai: u64 = 0,
 }
 
-// TODO treat owner as an identity once https://github.com/FuelLabs/sway/issues/2647 is fixed
 impl Oracle for Contract {
     fn owner() -> Identity {
         Identity::Address(~Address::from(owner))
     }
 
     #[storage(read)]
-    fn price() -> u64 {
-        storage.price
+    fn price_eth() -> u64 {
+        storage.price_eth
+    }
+
+    #[storage(read)]
+    fn price_dai() -> u64 {
+        storage.price_dai
     }
 
     #[storage(write)]
-    fn set_price(price: u64) {
-        require(msg_sender().unwrap() == Identity::Address(~Address::from(owner)), AccessError::NotOwner);
+    fn set_price_eth(price_eth: u64) {
+        // require(msg_sender().unwrap() == Identity::Address(~Address::from(owner)), AccessError::NotOwner);
+        storage.price_eth = price_eth;
+    }
 
-        storage.price = price;
-
-        log(PriceUpdateEvent { price });
+    #[storage(write)]
+    fn set_price_dai(price_dai: u64) {
+        // require(msg_sender().unwrap() == Identity::Address(~Address::from(owner)), AccessError::NotOwner);
+        storage.price_dai = price_dai;
     }
 }

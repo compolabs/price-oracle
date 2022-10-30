@@ -41,7 +41,7 @@ const _abi = [
   },
   {
     type: "function",
-    name: "price",
+    name: "price_eth",
     inputs: [],
     outputs: [
       {
@@ -52,11 +52,39 @@ const _abi = [
   },
   {
     type: "function",
-    name: "set_price",
+    name: "price_dai",
+    inputs: [],
+    outputs: [
+      {
+        type: "u64",
+        name: "",
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "set_price_eth",
     inputs: [
       {
         type: "u64",
-        name: "price",
+        name: "price_eth",
+      },
+    ],
+    outputs: [
+      {
+        type: "()",
+        name: "",
+        components: [],
+      },
+    ],
+  },
+  {
+    type: "function",
+    name: "set_price_dai",
+    inputs: [
+      {
+        type: "u64",
+        name: "price_dai",
       },
     ],
     outputs: [

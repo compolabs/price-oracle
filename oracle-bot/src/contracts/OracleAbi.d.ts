@@ -36,21 +36,45 @@ export type IdentityOutput = Enum<{
 interface OracleAbiInterface extends Interface {
   functions: {
     owner: FunctionFragment;
-    price: FunctionFragment;
-    set_price: FunctionFragment;
+    price_eth: FunctionFragment;
+    price_dai: FunctionFragment;
+    set_price_eth: FunctionFragment;
+    set_price_dai: FunctionFragment;
   };
 
   encodeFunctionData(functionFragment: "owner", values?: undefined): Uint8Array;
-  encodeFunctionData(functionFragment: "price", values?: undefined): Uint8Array;
   encodeFunctionData(
-    functionFragment: "set_price",
+    functionFragment: "price_eth",
+    values?: undefined
+  ): Uint8Array;
+  encodeFunctionData(
+    functionFragment: "price_dai",
+    values?: undefined
+  ): Uint8Array;
+  encodeFunctionData(
+    functionFragment: "set_price_eth",
+    values: [BigNumberish]
+  ): Uint8Array;
+  encodeFunctionData(
+    functionFragment: "set_price_dai",
     values: [BigNumberish]
   ): Uint8Array;
 
   decodeFunctionData(functionFragment: "owner", data: BytesLike): DecodedValue;
-  decodeFunctionData(functionFragment: "price", data: BytesLike): DecodedValue;
   decodeFunctionData(
-    functionFragment: "set_price",
+    functionFragment: "price_eth",
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: "price_dai",
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: "set_price_eth",
+    data: BytesLike
+  ): DecodedValue;
+  decodeFunctionData(
+    functionFragment: "set_price_dai",
     data: BytesLike
   ): DecodedValue;
 }
@@ -60,8 +84,12 @@ export class OracleAbi extends Contract {
   functions: {
     owner: InvokeFunction<[], IdentityOutput>;
 
-    price: InvokeFunction<[], BN>;
+    price_eth: InvokeFunction<[], BN>;
 
-    set_price: InvokeFunction<[price: BigNumberish], void>;
+    price_dai: InvokeFunction<[], BN>;
+
+    set_price_eth: InvokeFunction<[price_eth: BigNumberish], void>;
+
+    set_price_dai: InvokeFunction<[price_dai: BigNumberish], void>;
   };
 }
