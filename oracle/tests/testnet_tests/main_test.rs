@@ -28,36 +28,57 @@ async fn main_test() {
             symbol: "BNB",
             decimals: 8,
             default_price: 250,
-            asset_id: "fuel1dn2xden4gugzv43x0f0kqpg38eydraf6dprwdqvussd8704d4l5s9ucfwd",
+            asset_id: "0x6cd466e67547102656267a5f6005113e48d1f53a6846e6819c841a7f3eadafe9",
             coingeco_id: "binancecoin",
         },
         AssetConfig {
             symbol: "BTC",
             decimals: 8,
             default_price: 19000,
-            asset_id: "fuel1s50vtcz05dy9hgrefv6qxzau6u8fd03g9n2znksrck8gmex5dsqqnweysd",
+            asset_id: "0x851ec5e04fa3485ba0794b34030bbcd70e96be282cd429da03c58e8de4d46c00",
             coingeco_id: "bitcoin",
         },
         AssetConfig {
             symbol: "BUSD",
             decimals: 6,
             default_price: 1,
-            asset_id: "fuel1lnwv27svtxlr3mk2h96am5pu8nfvkxzjj4akyt2kz0tqaj857tpq22vvqu",
+            asset_id: "0xfcdcc57a0c59be38eecab975ddd03c3cd2cb1852957b622d5613d60ec8f4f2c2",
             coingeco_id: "binance-usd",
         },
         AssetConfig {
             symbol: "USDC",
             decimals: 6,
             default_price: 1,
-            asset_id: "fuel1uzwycupwd2pr0hg872fz3sfkesrkk7wtn58plzga88z5mj2sdxkqep4fya",
+            asset_id: "0xe09c4c702e6a8237dd07f29228c136cc076b79cb9d0e1f891d39c54dc95069ac",
             coingeco_id: "usd-coin",
         },
         AssetConfig {
             symbol: "USDT",
             decimals: 6,
             default_price: 1,
-            asset_id: "fuel1049jc47sepc4hc6jyjefx4a6y3zwgrmv68vjy75karv0f285fwjquwej5c",
+            asset_id: "0x7d4b2c57d0c8715be35224b29357ba2444e40f6cd1d9227a96e8d8f4a8f44ba4",
             coingeco_id: "tether",
+        },
+        AssetConfig {
+            symbol: "UNI",
+            decimals: 9,
+            default_price: 5,
+            asset_id: "0xcc28b139c7664ac9cddc2c01c00559fbbebd6fa8a879db341adf3a4aafdaa137",
+            coingeco_id: "uniswap",
+        },
+        AssetConfig {
+            symbol: "LINK",
+            decimals: 9,
+            default_price: 5,
+            asset_id: "0x579cd9e73d2471fd0ce20156e06e34c09cdf2fd655c993af8d236185305461ee",
+            coingeco_id: "chainlink",
+        },
+        AssetConfig {
+            symbol: "ETH",
+            decimals: 9,
+            default_price: 1200,
+            asset_id: "0x0000000000000000000000000000000000000000000000000000000000000000",
+            coingeco_id: "ethereum",
         },
     ];
 
@@ -74,13 +95,14 @@ async fn main_test() {
     println!("{} Initialize\n", if _res.is_ok() { "✅" } else { "❌" });
 
     let client = reqwest::Client::new();
-    let req = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin%2Cbitcoin%2Cbinance-usd%2Cusd-coin%2Ctether&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&precision=8";
+    let req = "https://api.coingecko.com/api/v3/simple/price?ids=binancecoin%2Cbitcoin%2Cbinance-usd%2Cusd-coin%2Ctether%2Cuniswap%2Cethereum%2Cchainlink&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&precision=9";
     let body = client.get(req).send().await.unwrap().text().await.unwrap();
     let responce: serde_json::Value = serde_json::from_str(body.as_str()).unwrap();
 
     for asset in assets {
-        let bech32_address = Bech32ContractId::from_str(asset.asset_id)
-            .expect("failed to create Bech32 address from string");
+        let contract_id = ContractId::from_str(asset.asset_id)
+            .expect("failed to create ContractId address from string");
+        let bech32_address = Bech32ContractId::from(contract_id);
 
         let asset_id = ContractId::from(bech32_address);
         let symbol = asset.symbol;
