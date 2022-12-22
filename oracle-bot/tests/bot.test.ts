@@ -15,7 +15,7 @@ const contract = OracleAbi__factory.connect(CONTRACT_ID, wallet);
 
 const decimal = 8
 
-describe("Eth price oracle TEST", () => {
+describe("Eth price TEST", () => {
     // it("hardcode test", async () => {
     //     // // const ethTx = new FunctionInvocationScope(contract, "set_price_eth", 1650);
     //     // contract.multiCall([
@@ -28,16 +28,24 @@ describe("Eth price oracle TEST", () => {
     //     ])
     //     console.log(result)
     // });
+    console.log('Start demo');
+    console.log('Oracle contract is deployed at '+ CONTRACT_ID);
     it("update prices", async () => {
+
+        console.log('Put new data to oracle '+ Date.now());
         const {data} = await axios.get(
             "https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cdai&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&precision=" + decimal
         );
-        await Promise.all([
+        console.log('ETH '+ data.ethereum.usd);
+        console.log('DAI '+ data.dai.usd);
+        const result = await Promise.all([
             contract.functions.set_price_eth(BN.parseUnits(data.ethereum.usd, decimal).toString()).txParams({gasPrice: 1}).call(),
             contract.functions.set_price_dai(BN.parseUnits(data.dai.usd, decimal).toString()).txParams({gasPrice: 1}).call()
         ])
-    });
+        console.log('TxIds '+ result.map(res => res.transactionResult.transactionId).join(', '));
+    }, 50000);
     it("read prices", async () => {
+        console.log('Check prices');
         const {value: eth} = await contract.functions.price_eth().get();
         const {value: dai} = await contract.functions.price_dai().get();
         console.log({eth: eth.toString(), dai: dai.toString()})

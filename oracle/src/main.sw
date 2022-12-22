@@ -1,53 +1,83 @@
 contract;
 
-dep data_structures;
-dep errors;
-dep events;
-dep interface;
-
 use std::{
     address::Address,
-    chain::auth::msg_sender,
+    auth::{
+        AuthError,
+        msg_sender,
+    },
+    block::timestamp,
     identity::Identity,
     logging::log,
     result::Result,
     revert::require,
 };
 
-use data_structures::State;
-use errors::AccessError;
-use events::PriceUpdateEvent;
-use interface::Oracle;
+abi Oracle {
+    #[storage(read)]
+    fn owner() -> Identity;
+
+    #[storage(read, write)]
+    fn initialize(owner: Address);
+
+    #[storage(read, write)]
+    fn set_price(asset_id: ContractId, price_value: u64);
+
+    #[storage(read)]
+    fn get_price(asset_id: ContractId) -> Price;
+}
+
+struct Price {
+    asset_id: ContractId,
+    price: u64,
+    last_update: u64,
+}
+const ZERO_B256 = 0x0000000000000000000000000000000000000000000000000000000000000000;
 
 storage {
-    price_eth: u64 = 0,
-    price_dai: u64 = 0,
+    prices: StorageMap<ContractId, Price> = StorageMap {},
+    owner: Address = Address::from(ZERO_B256),
+}
+
+pub fn get_msg_sender_address_or_panic() -> Address {
+    let sender: Result<Identity, AuthError> = msg_sender();
+    if let Identity::Address(address) = sender.unwrap() {
+        address
+    } else {
+        revert(0);
+    }
+}
+
+#[storage(read)]
+fn validate_owner() {
+    let sender = get_msg_sender_address_or_panic();
+    require(storage.owner == sender, "Access denied");
 }
 
 impl Oracle for Contract {
+    #[storage(read, write)]
+    fn initialize(owner: Address) {
+        require(storage.owner.into() == ZERO_B256, "Cannot reinitialize");
+        storage.owner = owner;
+    }
+
+    #[storage(read)]
     fn owner() -> Identity {
-        Identity::Address(~Address::from(owner))
+        Identity::Address(storage.owner)
+    }
+
+    #[storage(read, write)]
+    fn set_price(asset_id: ContractId, price: u64) {
+        validate_owner();
+        storage.prices.insert(asset_id, Price {
+            price,
+            asset_id,
+            last_update: timestamp(),
+        });
     }
 
     #[storage(read)]
-    fn price_eth() -> u64 {
-        storage.price_eth
-    }
-
-    #[storage(read)]
-    fn price_dai() -> u64 {
-        storage.price_dai
-    }
-
-    #[storage(write)]
-    fn set_price_eth(price_eth: u64) {
-        // require(msg_sender().unwrap() == Identity::Address(~Address::from(owner)), AccessError::NotOwner);
-        storage.price_eth = price_eth;
-    }
-
-    #[storage(write)]
-    fn set_price_dai(price_dai: u64) {
-        // require(msg_sender().unwrap() == Identity::Address(~Address::from(owner)), AccessError::NotOwner);
-        storage.price_dai = price_dai;
+    fn get_price(asset_id: ContractId) -> Price {
+        storage.prices.get(asset_id)
     }
 }
