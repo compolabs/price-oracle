@@ -1,6 +1,5 @@
 use dotenv::dotenv;
 use fuels::prelude::*;
-use std::str::FromStr;
 
 const RPC: &str = "node-beta-2.fuel.network";
 

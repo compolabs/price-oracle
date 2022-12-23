@@ -1,5 +1,5 @@
 use fuels::prelude::*;
-use rand::prelude::{Rng, SeedableRng, StdRng};
+use rand::prelude::{Rng};
 
 use crate::utils::number_utils::parse_units;
 
@@ -18,9 +18,9 @@ pub mod abi_calls {
         contract.methods().initialize(owner).call().await.unwrap()
     }
 
-    pub async fn owner(contract: &OracleContract) -> Identity {
-        contract.methods().owner().call().await.unwrap().value
-    }
+    // pub async fn owner(contract: &OracleContract) -> Identity {
+    //     contract.methods().owner().call().await.unwrap().value
+    // }
 
     pub async fn get_price(contract: &OracleContract, asset_id: ContractId) -> Price {
         contract
@@ -126,8 +126,8 @@ pub mod test_helpers {
         instance
     }
 
-    pub async fn print_balances(wallet: &WalletUnlocked) {
-        let balances = wallet.get_balances().await.unwrap();
-        println!("{:#?}\n", balances);
-    }
+    // pub async fn print_balances(wallet: &WalletUnlocked) {
+    //     let balances = wallet.get_balances().await.unwrap();
+    //     println!("{:#?}\n", balances);
+    // }
 }

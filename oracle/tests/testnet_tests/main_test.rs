@@ -7,7 +7,7 @@ use fuels::{
 
 use crate::utils::{
     local_tests_utils::OracleContract,
-    number_utils::{format_units, parse_units},
+    number_utils::{format_units},
     testnet_tests_utils::setup_wallet,
 };
 
