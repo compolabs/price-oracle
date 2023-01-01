@@ -109,7 +109,7 @@ async fn main_test() {
         let last_price = methods.get_price(asset_id).simulate().await.unwrap();
 
         let price = match responce[asset.coingeco_id]["usd"].as_f64() {
-            Some(p) => (p * 10f64.powf(asset.decimals as f64)).round() as u64,
+            Some(p) => (p * 10f64.powf(9f64)).round() as u64,
             _ => asset.default_price,
         };
 
@@ -122,9 +122,9 @@ async fn main_test() {
         println!("{} Set price", if _res.is_ok() { "✅" } else { "❌" },);
         println!(
             "{symbol} price was changed {} {symbol} ({}) -> {} {symbol} ({})",
-            format_units(last_price.value.price, asset.decimals),
+            format_units(last_price.value.price, 9),
             last_price.value.price,
-            format_units(new_price.value.price, asset.decimals),
+            format_units(new_price.value.price, 9),
             new_price.value.price
         );
     }
