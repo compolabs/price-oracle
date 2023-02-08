@@ -1,6 +1,0 @@
-.idea
-.env
-node_modules
-.DS_Store
-docker-compose.yaml
-coverage
