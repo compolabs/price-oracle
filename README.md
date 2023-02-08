@@ -88,7 +88,7 @@ Go to the server folder
 cd ../server
 ```
 
-Setup of юenv
+Setup of .env
 ```
 echo "
 SECRET=<YOUR_SECRET>#SECRET OF YOUR WALLET FROM THE LAST STEPS
@@ -97,14 +97,27 @@ FREQUENCY=60 #FREQUENCY OF UPDATE
 " >> .env 
 ```
 
+Setup tokens list
+You can manage the token list in the file `price-oracle/tokens.json`. By default `tokens.json` is filled by swaylend tokens.
+You should provide info about each token in this format. 
+You can find `coingeco_id` on the coingecko.com website in token info as `API id`
+You can check the example here:
+https://www.coingecko.com/en/coins/ethereum
+```
+ {
+   "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
+   "symbol": "ETH",
+   "coingeco_id": "ethereum",
+   "default_price": 1200
+}
+```
+
 Let's start our server
 ```
 cargo run 
 ```
 Output
 ```
-
-
 ███████╗██╗    ██╗ █████╗ ██╗   ██╗     ██████╗  █████╗ ███╗   ██╗ ██████╗ 
 ██╔════╝██║    ██║██╔══██╗╚██╗ ██╔╝    ██╔════╝ ██╔══██╗████╗  ██║██╔════╝ 
 ███████╗██║ █╗ ██║███████║ ╚████╔╝     ██║  ███╗███████║██╔██╗ ██║██║  ███╗
@@ -114,17 +127,19 @@ Output
 
 ✅ Oracle is alive
 
+Oracle owner   = Address(330e6922460257edbaac821df96a555bc745041c97ff5411ec83f2b29f471c27)
+Wallet address = Address(330e6922460257edbaac821df96a555bc745041c97ff5411ec83f2b29f471c27)
 🪬 Price oracle update
-1 USDC = $0.999918042
-1 ETH = $1657.97964672
-1 LINK = $7.159493594
-1 BTC = $22993.081278477
-1 UNI = $6.776005727
-1 SWAY = $55.802529211
-1 COMP = $55.802529211
+1 USDC = $1.000435188
+1 ETH = $1658.670603406
+1 LINK = $7.16316701
+1 BTC = $23025.231488235
+1 UNI = $6.777685611
+1 SWAY = $56.298952718
+1 COMP = $56.298952718
 
 ⛽️ Gas used: 109362
-⚖️ Balance: 0.999999963 ETH
+⚖️ Balance: 0.499999991 ETH
 👁 Oracle address: 0xd3ebf0eff0eda379b8b3eeb79c2f662d3d1b60110547b1590e6411e5a5f340df
 -----------------------------------
 ```

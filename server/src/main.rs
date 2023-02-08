@@ -1,6 +1,7 @@
 use dotenv::dotenv;
-use fuels::prelude::{
-    abigen, Bech32ContractId, ContractId, Provider, WalletUnlocked, BASE_ASSET_ID,
+use fuels::{
+    prelude::{abigen, Bech32ContractId, ContractId, Provider, WalletUnlocked, BASE_ASSET_ID},
+    types::{Address, Identity},
 };
 use std::{env, fs::read_to_string, str::FromStr, thread::sleep, time::Duration};
 mod utils;
@@ -17,8 +18,8 @@ const RPC: &str = "node-beta-2.fuel.network";
 
 #[tokio::main]
 async fn main() {
-    let deploy_config_json_str = read_to_string("../tokens.json")
-        .expect("Should have been able to read the file");
+    let deploy_config_json_str =
+        read_to_string("../tokens.json").expect("Should have been able to read the file");
     let assets: serde_json::Value = serde_json::from_str(deploy_config_json_str.as_str()).unwrap();
     let assets = assets.as_array().unwrap();
     // contract
@@ -29,17 +30,21 @@ async fn main() {
     dotenv().ok();
     let secret = env::var("SECRET").expect("❌ Expected a account secret in the environment");
     let wallet = WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider));
-    
-    let oracle_address = env::var("ORACLE_ADDRESS").expect("❌ Expected a ORACLE_ADDRESS in the environment");
+
+    let oracle_address =
+        env::var("ORACLE_ADDRESS").expect("❌ Expected a ORACLE_ADDRESS in the environment");
     let bech32_id = Bech32ContractId::from(ContractId::from_str(oracle_address.as_str()).unwrap());
     let oracle = OracleContract::new(bech32_id, wallet.clone());
-    
+
     let frequency = match env::var("FREQUENCY") {
         Ok(f) => f.parse::<u64>().expect("❌ Invalid FREQUENCY"),
         _ => 60,
     };
 
     print_swaygang_sign("✅ Oracle is alive");
+    let owner = oracle.methods().owner().simulate().await.unwrap().value;
+    println!("Oracle owner   = {:?}", owner);
+    println!("Wallet address = {:?}\n", Identity::Address(Address::from(wallet.address())));
     loop {
         let c = reqwest::Client::new();
         let req = "https://api.coingecko.com/api/v3/simple/price?ids=compound-governance-token%2Cbinancecoin%2Cbitcoin%2Cbinance-usd%2Cusd-coin%2Ctether%2Cuniswap%2Cethereum%2Cchainlink&vs_currencies=usd&include_market_cap=false&include_24hr_vol=false&include_24hr_change=false&include_last_updated_at=false&precision=9";
@@ -72,7 +77,8 @@ async fn main() {
             message += format!("\n-----------------------------------").as_str();
             println!("{message}");
         } else {
-            println!("❌ Cannot update prices")
+            println!("❌ Cannot update prices");
+            println!("{}", res.err().unwrap());
         }
 
         sleep(Duration::from_secs(frequency));
