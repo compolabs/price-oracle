@@ -34,6 +34,11 @@ async fn main() {
     let bech32_id = Bech32ContractId::from(ContractId::from_str(oracle_address.as_str()).unwrap());
     let oracle = OracleContract::new(bech32_id, wallet.clone());
     
+    let frequency = match env::var("FREQUENCY") {
+        Ok(f) => f.parse::<u64>().expect("❌ Invalid FREQUENCY"),
+        _ => 60,
+    };
+
     print_swaygang_sign("✅ Oracle is alive");
     loop {
         let c = reqwest::Client::new();
@@ -70,6 +75,6 @@ async fn main() {
             println!("❌ Cannot update prices")
         }
 
-        sleep(Duration::from_secs(60));
+        sleep(Duration::from_secs(frequency));
     }
 }
