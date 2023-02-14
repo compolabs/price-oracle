@@ -6,17 +6,21 @@ The Sway Land Price Oracle receives price updates from a poster (who pulls the p
 Welcome to our tutorial on creating a price oracle in the Sway programming language for the Fuel network.
 One of the key components in the blockchain is the price oracle, a decentralized system for providing accurate, up-to-date data on asset prices. Popular projects like Chainlink and Pyth.network have already proven the importance of price oracles in the blockchain ecosystem.
 
-However, the Fuel Network currently doesn't have any available price oracle solutions yet. That's why we would like to present a tutorial on building a price oracle in the Sway programming language, specifically designed for the Fuel Network. This tutorial will guide you through the process of building a basic price oracle and provide you with the necessary code and steps to run it on a server using Docker on AWS. This oracle is not highly secure or scalable, but it will provide a good introduction to the concept of price oracles in blockchain technology and give you the opportunity to get familiar with building solutions on the Fuel network. So, let's dive into the world of price oracles and see what it's all about!
+However, the Fuel Network currently doesn't have any available price oracle solutions yet. That's why we would like to present a tutorial on building a price oracle in the Sway programming language, specifically designed for the Fuel Network. This tutorial will guide you through the process of building a basic price oracle and provide you with the necessary code and steps to run it on a server using Docker. This oracle is not highly secure or scalable, but it will provide a good introduction to the concept of price oracles in blockchain technology and give you the opportunity to get familiar with building solutions on the Fuel network. So, let's dive into the world of price oracles and see what it's all about!
 
 ## Deployment Steps
 ### Clone the Repository
 
 To get started, you will need to clone the SwayGang price oracle repository from GitHub onto your local computer. You can do this by using the git clone command in your terminal or command prompt:
-`git clone https://github.com/sway-gang/price-oracle.git`
+```
+git clone https://github.com/sway-gang/price-oracle.git
+```
 
 Once the cloning process is complete, navigate to the project folder by using the following command:
 
-`cd ./price-oracle`
+```
+cd ./price-oracle
+```
 
 ### Set Up the Environment
 To set up the environment for the price oracle, you need to perform the following steps:
@@ -32,7 +36,7 @@ The first step in setting up the environment is to create a new wallet. This wal
 ```
 forc-wallet new  
 ```
-When you run the above command, you will be prompted to enter a password. This password is used to encrypt the secret key for your wallet, which is required to interact with the Ethereum network.
+When you run the above command, you will be prompted to enter a password. This password is used to encrypt the secret key for your wallet, which is required to interact with the Fuel network.
 
 After entering the password, you will see the following output:
 ```
@@ -119,10 +123,9 @@ FREQUENCY=60 #FREQUENCY OF UPDATE
 " >> .env 
 ```
 
-Setup tokens list
-You can manage the token list in the file price-oracle/tokens.json. By default tokens.json is filled by swaylend tokens.
-You should provide info about each token in this format.
-You can find coingeco_id on the coingecko.com website in token info as API id. You can check an example here: https://www.coingecko.com/en/coins/ethereum
+### Setup tokens list
+You can manage the token list in the file `price-oracle/tokens.json`. By default `tokens.json` is filled by [swaylend](https://app.swaylend.com/) tokens.
+You should provide info about each token in this format:
 ```
  {
    "asset_id": "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -131,6 +134,7 @@ You can find coingeco_id on the coingecko.com website in token info as API id. Y
    "default_price": 1200
 }
 ```
+You can find coingeco_id on the coingecko.com website in token info as API id. You can check an example here: https://www.coingecko.com/en/coins/ethereum
 
 Start the server with the following command:
 ```
@@ -178,5 +182,5 @@ sudo docker run --restart=always -d oracle
 
 ```
 
-## conclusion
-In conclusion, the article describes the steps to run a price oracle update server. The process involves navigating to the server directory, setting up the environment variables in the .env file, updating the list of tokens in the price-oracle/tokens.json file, and finally starting the server using cargo run. The article also mentions that the server can be run using docker by building the image and running it with the appropriate commands. These steps ensure that the price oracle server is up and running, providing real-time updates on the prices of various cryptocurrencies.
+## Summary
+This tutorial on creating a price oracle in the Sway programming language for the Fuel network will guide you through the steps of building a basic, yet functional oracle. As a key component of blockchain technology, price oracles provide accurate, up-to-date data on asset prices and are essential to the functioning of blockchain systems. With this tutorial, you will gain hands-on experience building a solution for the Fuel Network, and a better understanding of process of development on the Fuel network. 
