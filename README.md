@@ -183,4 +183,4 @@ sudo docker run --restart=always -d oracle
 ```
 
 ## Summary
-This tutorial on creating a price oracle in the Sway programming language for Fuel Network will guide you through the steps of building a basic, yet functional oracle. As a key component of blockchain technology, price oracles provide accurate, up-to-date data on asset prices and are essential to the functioning of blockchain systems. With this tutorial, you will gain hands-on experience building a solution for Fuel Network, and a better understanding of process of development on Fuel Network. 
+This tutorial on creating a price oracle in the Sway programming language for Fuel Network will guide you through the steps of building a basic, yet functional oracle. As a key component of blockchain infrastructure, price oracles provide accurate, up-to-date data on asset prices and are essential to the functioning of blockchain ecosystems. With this tutorial, you will gain hands-on experience building a solution for Fuel Network, and a better understanding of process of development on Fuel Network. 
